@@ -33,6 +33,8 @@ export default class Home extends Component {
     }
 
     renderProduct = ({ item }) => {
+        const { navigation } = this.props;
+
         return (
             <Product>
                 <ProductImage source={{ uri: item.image }} />
@@ -46,7 +48,7 @@ export default class Home extends Component {
                         <Icon name="add-shopping-cart" color="#fff" size={20} />
                         <ProductAmountText>2</ProductAmountText>
                     </ProductAmount>
-                    <AddButtonText>ADICIONAR</AddButtonText>
+                    <AddButtonText onPress={()=> navigation.navigate('Cart')} >ADICIONAR</AddButtonText>
                 </AddButton>
             </Product>
         );
