@@ -1,20 +1,22 @@
+import React from 'react';
+
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 
+import Header from './Components/Header';
+
 const Routes = createAppContainer(
     createStackNavigator(
         { Home, Cart },
         {
             defaultNavigationOptions: {
-                headerBackTitleVisible: false,
-                headerTitleAlign: 'left',
-                headerStyle: {
-                    backgroundColor: '#141419',
+                header: () => <Header />,
+                cardStyle: {
+                    backgroundColor: '#191920',
                 },
-                headerTintColor: '#fff',
             },
         }
     )
