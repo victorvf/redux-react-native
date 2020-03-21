@@ -1,6 +1,6 @@
 export default function cart(state = [], action) {
     switch (action.type) {
-        case 'ADD_TO_CART':
+        case '@cart/ADD':
             return [...state, action.item];
         default:
             return state;
