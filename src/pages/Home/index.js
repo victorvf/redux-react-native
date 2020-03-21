@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -17,11 +18,7 @@ import {
     ProductAmountText,
 } from './styles';
 
-export default class Home extends Component {
-    static navigationOptions = {
-        title: 'Testeando',
-    };
-
+class Home extends Component {
     state = {
         products: [],
     }
@@ -32,9 +29,16 @@ export default class Home extends Component {
         this.setState({ products: response.data });
     }
 
-    renderProduct = ({ item }) => {
-        const { navigation } = this.props;
+    handleAddProduct = product => {
+        const { dispatch } = this.props;
 
+        dispatch({
+            type: 'ADD_TO_CART',
+            product,
+        });
+    };
+
+    renderProduct = ({ item }) => {
         return (
             <Product>
                 <ProductImage source={{ uri: item.image }} />
@@ -48,7 +52,9 @@ export default class Home extends Component {
                         <Icon name="add-shopping-cart" color="#fff" size={20} />
                         <ProductAmountText>2</ProductAmountText>
                     </ProductAmount>
-                    <AddButtonText onPress={()=> navigation.navigate('Cart')} >ADICIONAR</AddButtonText>
+                    <AddButtonText onPress={() => this.handleAddProduct(item)}>
+                        ADICIONAR
+                    </AddButtonText>
                 </AddButton>
             </Product>
         );
@@ -69,3 +75,5 @@ export default class Home extends Component {
         );
     }
 }
+
+export default connect()(Home);
