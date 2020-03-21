@@ -1,10 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-// import { formatPrice } from '../../util/format';
+import { formatPrice } from '../../util/format';
+import * as CartActions from '../../store/modules/cart/actions';
 
 import {
     Container,
@@ -25,7 +27,15 @@ import {
     TotalButtonText,
 } from './styles';
 
-function Cart({ cart }) {
+function Cart({ cart, total, removeFromCart, updateAmount }) {
+    function increment(product) {
+        updateAmount(product.id, product.amount + 1);
+    }
+
+    function decrement(product) {
+        updateAmount(product.id, product.amount - 1);
+    }
+
     return (
         <Container>
             <List
@@ -39,21 +49,23 @@ function Cart({ cart }) {
                                 <ProductTitle>{item.title}</ProductTitle>
                                 <ProductPrice>{`R$${item.price}`}</ProductPrice>
                             </View>
-                            <ButtonControl>
+                            <ButtonControl
+                                onPress={() => removeFromCart(item.id)}
+                            >
                                 <Icon name="delete" size={25} color="#7159c1" />
                             </ButtonControl>
                         </ProductInfo>
                         <ProductControls>
                             <Controls>
-                                <ButtonControl>
+                                <ButtonControl onPress={() => decrement(item)}>
                                     <Icon
                                         name="remove-circle-outline"
                                         size={25}
                                         color="#7159c1"
                                     />
                                 </ButtonControl>
-                                <ProductAmount value={String(3)} />
-                                <ButtonControl>
+                                <ProductAmount value={String(item.amount)} />
+                                <ButtonControl onPress={() => increment(item)}>
                                     <Icon
                                         name="add-circle-outline"
                                         size={25}
@@ -61,14 +73,14 @@ function Cart({ cart }) {
                                     />
                                 </ButtonControl>
                             </Controls>
-                            <ProductSubTotal>R$129,99</ProductSubTotal>
+                            <ProductSubTotal>{item.subtotal}</ProductSubTotal>
                         </ProductControls>
                     </>
                 )}
             />
             <TotalContainer>
                 <TotalText>TOTAL</TotalText>
-                <TotalTextPrice>R$1987,99</TotalTextPrice>
+                <TotalTextPrice>{total}</TotalTextPrice>
                 <TotalButton>
                     <TotalButtonText>FINALIZAR PEDIDO</TotalButtonText>
                 </TotalButton>
@@ -80,7 +92,17 @@ function Cart({ cart }) {
 const mapStateToProps = state => ({
     cart: state.cart.map(product => ({
         ...product,
+        subtotal: formatPrice(product.price * product.amount),
     })),
+    total: formatPrice(
+        state.cart.reduce(
+            (total, product) => total + product.price * product.amount,
+            0
+        )
+    ),
 });
 
-export default connect(mapStateToProps)(Cart);
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);

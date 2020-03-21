@@ -11,11 +11,9 @@ import store from './store';
 
 export default function App() {
     return (
-        <>
+        <Provider store={store}>
             <StatusBar barStyle="light-content" backgroundColor="#141419" />
-            <Provider store={store}>
-                <Routes />
-            </Provider>
-        </>
+            <Routes />
+        </Provider>
     );
 }

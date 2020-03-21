@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.7",
     "axios": "^0.19.2",
+    "immer": "^6.0.2",
+    "intl": "^1.2.5",
     "polished": "^3.4.4",
     "react": "16.9.0",
     "react-native": "0.61.5",
@@ -23,10 +25,10 @@
     "react-navigation": "^4.3.1",
     "react-navigation-stack": "^2.3.2",
     "react-redux": "^7.2.0",
-    "redux": "^4.0.5",
-    "styled-components": "^5.0.1",
     "reactotron-react-native": "^4.0.3",
-    "reactotron-redux": "^3.1.2"
+    "reactotron-redux": "^3.1.2",
+    "redux": "^4.0.5",
+    "styled-components": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",
