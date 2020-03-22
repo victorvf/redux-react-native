@@ -12,12 +12,12 @@ const Routes = createAppContainer(
     createStackNavigator(
         { Home, Cart },
         {
-            defaultNavigationOptions: {
-                header: () => <Header />,
+            defaultNavigationOptions: navigation => ({
+                header: () => <Header {...navigation} />,
                 cardStyle: {
                     backgroundColor: '#191920',
                 },
-            },
+            }),
         }
     )
 );

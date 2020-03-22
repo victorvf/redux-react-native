@@ -6,14 +6,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { Wrapper, Container, Logo, BasketContainer, ItemCount } from './styles';
 
-function Header({ cartSize }) {
+function Header({ navigation ,cartSize }) {
     return (
         <Wrapper>
             <Container>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                     <Logo />
                 </TouchableOpacity>
-                <BasketContainer>
+                <BasketContainer onPress={() => navigation.navigate('Cart')}>
                     <Icon name="shopping-basket" color="#fff" size={24} />
                     <ItemCount>{cartSize || 0}</ItemCount>
                 </BasketContainer>
