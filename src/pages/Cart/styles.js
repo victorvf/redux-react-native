@@ -99,3 +99,13 @@ export const TotalButtonText = styled.Text`
     font-weight: bold;
     text-align: center;
 `;
+
+export const EmptyCart = styled.View`
+    padding: 40px 10px;
+    align-items: center;
+`;
+
+export const EmptyText = styled.Text`
+    color: #777;
+    font-size: 18px;
+`;
