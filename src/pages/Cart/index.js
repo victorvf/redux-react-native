@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -29,13 +28,36 @@ import {
     EmptyText,
 } from './styles';
 
-function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
+export default function Cart() {
+    const dispatch = useDispatch();
+
+    const cart = useSelector(state =>
+        state.cart.map(product => ({
+            ...product,
+            subtotal: formatPrice(product.price * product.amount),
+        }))
+    );
+
+    const total = useSelector(state =>
+        formatPrice(
+            state.cart.reduce(
+                (totalPrice, product) =>
+                    totalPrice + product.price * product.amount,
+                0
+            )
+        )
+    );
+
     function increment(product) {
-        updateAmountRequest(product.id, product.amount + 1);
+        dispatch(
+            CartActions.updateAmountRequest(product.id, product.amount + 1)
+        );
     }
 
     function decrement(product) {
-        updateAmountRequest(product.id, product.amount - 1);
+        dispatch(
+            CartActions.updateAmountRequest(product.id, product.amount - 1)
+        );
     }
 
     return (
@@ -48,28 +70,50 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
                         renderItem={({ item }) => (
                             <>
                                 <ProductInfo>
-                                    <ProductImage source={{ uri: item.image }} />
+                                    <ProductImage
+                                        source={{ uri: item.image }}
+                                    />
                                     <View>
-                                        <ProductTitle>{item.title}</ProductTitle>
-                                        <ProductPrice>{`R$${item.price}`}</ProductPrice>
+                                        <ProductTitle>
+                                            {item.title}
+                                        </ProductTitle>
+                                        <ProductPrice>
+                                            {`R$${item.price}`}
+                                        </ProductPrice>
                                     </View>
                                     <ButtonControl
-                                        onPress={() => removeFromCart(item.id)}
+                                        onPress={() =>
+                                            dispatch(
+                                                CartActions.removeFromCart(
+                                                    item.id
+                                                )
+                                            )
+                                        }
                                     >
-                                        <Icon name="delete" size={25} color="#7159c1" />
+                                        <Icon
+                                            name="delete"
+                                            size={25}
+                                            color="#7159c1"
+                                        />
                                     </ButtonControl>
                                 </ProductInfo>
                                 <ProductControls>
                                     <Controls>
-                                        <ButtonControl onPress={() => decrement(item)}>
+                                        <ButtonControl
+                                            onPress={() => decrement(item)}
+                                        >
                                             <Icon
                                                 name="remove-circle-outline"
                                                 size={25}
                                                 color="#7159c1"
                                             />
                                         </ButtonControl>
-                                        <ProductAmount value={String(item.amount)} />
-                                        <ButtonControl onPress={() => increment(item)}>
+                                        <ProductAmount
+                                            value={String(item.amount)}
+                                        />
+                                        <ButtonControl
+                                            onPress={() => increment(item)}
+                                        >
                                             <Icon
                                                 name="add-circle-outline"
                                                 size={25}
@@ -77,7 +121,9 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
                                             />
                                         </ButtonControl>
                                     </Controls>
-                                    <ProductSubTotal>{item.subtotal}</ProductSubTotal>
+                                    <ProductSubTotal>
+                                        {item.subtotal}
+                                    </ProductSubTotal>
                                 </ProductControls>
                             </>
                         )}
@@ -99,21 +145,3 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
         </Container>
     );
 }
-
-const mapStateToProps = state => ({
-    cart: state.cart.map(product => ({
-        ...product,
-        subtotal: formatPrice(product.price * product.amount),
-    })),
-    total: formatPrice(
-        state.cart.reduce(
-            (total, product) => total + product.price * product.amount,
-            0
-        )
-    ),
-});
-
-const mapDispatchToProps = dispatch =>
-    bindActionCreators(CartActions, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
